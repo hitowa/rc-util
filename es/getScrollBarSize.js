@@ -1,20 +1,16 @@
 /* eslint-disable no-param-reassign */
-
-let cached: number;
-
-export default function getScrollBarSize(fresh?: boolean) {
+var cached;
+export default function getScrollBarSize(fresh) {
   if (typeof document === 'undefined') {
     return 0;
   }
 
   if (fresh || cached === undefined) {
-    const inner = document.createElement('div');
+    var inner = document.createElement('div');
     inner.style.width = '100%';
     inner.style.height = '200px';
-
-    const outer = document.createElement('div');
-    const outerStyle = outer.style;
-
+    var outer = document.createElement('div');
+    var outerStyle = outer.style;
     outerStyle.position = 'absolute';
     outerStyle.top = '0';
     outerStyle.left = '0';
@@ -23,48 +19,50 @@ export default function getScrollBarSize(fresh?: boolean) {
     outerStyle.width = '200px';
     outerStyle.height = '150px';
     outerStyle.overflow = 'hidden';
-
     outer.appendChild(inner);
-
     document.body.appendChild(outer);
-
-    const widthContained = inner.offsetWidth;
+    var widthContained = inner.offsetWidth;
     outer.style.overflow = 'scroll';
-    let widthScroll = inner.offsetWidth;
+    var widthScroll = inner.offsetWidth;
 
     if (widthContained === widthScroll) {
       widthScroll = outer.clientWidth;
     }
 
     document.body.removeChild(outer);
-
     cached = widthContained - widthScroll;
   }
+
   return cached;
 }
 
-function ensureSize(str: string) {
-  const match = str.match(/^(.*)px$/);
-  const value = Number(match?.[1]);
+function ensureSize(str) {
+  var match = str.match(/^(.*)px$/);
+  var value = Number(match === null || match === void 0 ? void 0 : match[1]);
   return Number.isNaN(value) ? getScrollBarSize() : value;
 }
 
-export function getTargetScrollBarSize(target: HTMLElement) {
-  if (
-    typeof document === 'undefined' ||
-    !target ||
-    !(target instanceof Element)
-  ) {
-    return { width: 0, height: 0 };
+export function getTargetScrollBarSize(target) {
+  if (typeof document === 'undefined' || !target || !(target instanceof Element)) {
+    return {
+      width: 0,
+      height: 0
+    };
   }
 
   try {
-    const { width, height } = getComputedStyle(target, '::-webkit-scrollbar');
+    var _getComputedStyle = getComputedStyle(target, '::-webkit-scrollbar'),
+        width = _getComputedStyle.width,
+        height = _getComputedStyle.height;
+
     return {
       width: ensureSize(width),
-      height: ensureSize(height),
+      height: ensureSize(height)
     };
   } catch (e) {
-    return { width: 0, height: 0 };
+    return {
+      width: 0,
+      height: 0
+    };
   }
 }

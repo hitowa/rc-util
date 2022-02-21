@@ -22,9 +22,7 @@ node_modules
 .cache
 *.css
 build
-lib
 coverage
 yarn.lock
-/es/
 package-lock.json
 .doc
